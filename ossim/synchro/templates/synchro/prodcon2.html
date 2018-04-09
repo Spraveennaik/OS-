@@ -1,0 +1,226 @@
+
+
+
+
+
+<!DOCTYPE html>
+{% load staticfiles %}
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body style="background-color:#e1f7d5">
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="js/bootstrap.min.js"></script>
+  <div class="container-fluid">
+
+      <center><br><h1 style="font-family:arial;color:#ff1a1a;font-size:35px">Simulation of Producer Consumer Semaphore</h1></center>
+    <p style="position:absolute;font-family:arial;font-size:20px;color:black;top:48%;left:47%"><br>BUFFER</br></p>
+
+    <img src="{% static 'img/pc.png' %}" alt="Mountain View" style="position:absolute;left:4%;top:17%;width:300px;height:250px;">
+
+
+    <img src="{% static 'img/package.png' %}", id ="one", name = "one", style="height:120px;width:120px;position:absolute;top:60%;left:11%;display: none"> </button>
+      <p style="position:absolute;font-family:arial;font-size:18px;color:black;left:16%;top:78%">1</p>
+    <img src="{% static 'img/package.png' %}", id ="two", name = "two", style="height:120px;width:120px;position:absolute;top:60%;left:22%;display: none"></button>
+      <p style="position:absolute;font-family:arial;font-size:18px;color:black;left:27%;top:77%">2</p>
+    <img src="{% static 'img/package.png' %}", id ="three", name = "three", style="height:120px;width:120px;position:absolute;top:60%;left:33%;display: none"> </button>
+      <p style="position:absolute;font-family:arial;font-size:18px;color:black;left:38%;top:77%">3</p>
+    <img src="{% static 'img/package.png' %}", id ="four", name = "four", style="height:120px;width:120px;position:absolute;top:60%;left:44%;display: none"> </button>
+      <p style="position:absolute;font-family:arial;font-size:18px;color:black;left:49%;top:77%">4</p>
+    <img src="{% static 'img/package.png' %}", id ="five", name = "five", style="height:120px;width:120px;position:absolute;top:60%;left:55%;display: none"> </button>
+      <p style="position:absolute;font-family:arial;font-size:18px;color:black;left:60%;top:77%">5</p>
+    <img src="{% static 'img/package.png' %}", id ="six", name = "six", style="height:120px;width:120px;position:absolute;top:60%;left:66%;display: none"> </button>
+      <p style="position:absolute;font-family:arial;font-size:18px;color:black;left:71%;top:77%">6</p>
+    <img src="{% static 'img/package.png' %}", id ="seven", name = "seven", style="height:120px;width:120px;position:absolute;top:60%;left:77%;display:none"></button>
+      <p style="position:absolute;font-family:arial;font-size:18px;color:black;left:82%;top:77%">7</p>
+
+
+l    <!--button type ="button", onclick ="initiate()">Next!</button-->
+
+    <button class="btn btn-primary" id ="prod", type ="button", onclick ="produce()", style ="height:160px;width:160px;position:absolute;top:25%;left:33%;font-size:25px;border-radius:125px;border:1px solid #000">Produce</button>
+    <button class="btn btn-primary" id ="con", type ="button", onclick ="consume()", style ="height:160px;width:160px;position:absolute;top:25%;left:56%;font-size:25px;border-radius:125px;border:1px solid #000">Consume</button>
+
+<!-- <button class="btn btn-warning" id ="buffer-size", type ="button" style ="height:50px;width:143px;position:absolute;top:75%;left:46%;">BUFFER_SIZE = 7</button> -->
+    <button class="btn btn-warning" id ="count", type ="button" style ="height:50px;width:143px;position:absolute;top:86%;left:45%;">Counter = 0</button>
+
+
+
+    <script type = "text/javascript">
+      var queue = [0,0,0,0,0,0,0]; var num=0;
+      var rear =-1; var front =-1;
+
+      function counter()
+      {
+        var counter = rear-front +1;
+        console.log(rear)
+        if(rear == -1 )
+        {
+          var change = document.getElementById("count");
+          change.innerHTML ="counter = 0"
+        }
+        else if(counter==1)
+        {
+          var change = document.getElementById("count");
+          change.innerHTML ="counter = 1"
+        }
+        if(counter==2)
+        {
+          var change = document.getElementById("count");
+          change.innerHTML ="counter = 2"
+        }
+        if(counter==3)
+        {
+          var change = document.getElementById("count");
+          change.innerHTML ="counter = 3"
+        }
+        if(counter==4)
+        {
+          var change = document.getElementById("count");
+          change.innerHTML ="counter = 4"
+        }
+        if(counter==5)
+        {
+          var change = document.getElementById("count");
+          change.innerHTML ="counter = 5"
+        }
+        if(counter==6)
+        {
+          var change = document.getElementById("count");
+          change.innerHTML ="counter = 6"
+        }
+        if(counter==7)
+        {
+          var change = document.getElementById("count");
+          change.innerHTML ="counter = 7"
+        }
+
+      }
+
+      function check()
+      {
+        if(num>0)
+        {
+          document.getElementById("con").disabled = false;
+        }
+        if(num<=6)
+        {
+          document.getElementById("prod").disabled = false;
+        }
+      }
+
+      function color()
+      {
+        if(queue[0]==1)
+        {
+          document.getElementById("one").style.display = 'block';
+        }
+        if(queue[1]==1)
+        {
+          document.getElementById("two").style.display = 'block';
+        }
+        if(queue[2]==1)
+        {
+          document.getElementById("three").style.display = 'block';
+        }
+        if(queue[3]==1)
+        {
+          document.getElementById("four").style.display = 'block';
+        }
+        if(queue[4]==1)
+        {
+          document.getElementById("five").style.display = 'block';
+        }
+        if(queue[5]==1)
+        {
+          document.getElementById("six").style.display = 'block';
+        }
+        if(queue[6]==1)
+        {
+          document.getElementById("seven").style.display = 'block';
+        }
+
+
+        if(queue[0]==0)
+        {
+          document.getElementById("one").style.display = 'none';
+        }
+        if(queue[1]==0)
+        {
+          document.getElementById("two").style.display = 'none';
+        }
+        if(queue[2]==0)
+        {
+          document.getElementById("three").style.display = 'none';
+        }
+        if(queue[3]==0)
+        {
+          document.getElementById("four").style.display = 'none';
+        }
+        if(queue[4]==0)
+        {
+          document.getElementById("five").style.display = 'none';
+        }
+        if(queue[5]==0)
+        {
+          document.getElementById("six").style.display = 'none';
+        }
+        if(queue[6]==0)
+        {
+          document.getElementById("seven").style.display = 'none';
+        }
+
+        check();
+      }
+
+      function produce()
+      {
+          num++;
+          if(num==7)
+          {
+            document.getElementById("prod").disabled = true;
+          }
+          if(front == -1 && rear ==-1)
+          {
+            front =0;
+            rear =0;
+            queue[rear] =1;
+          }
+          else
+          {
+              rear = (rear+1)%7;
+              queue[rear]=1;
+          }
+
+        color();
+        counter();
+      }
+
+      function consume()
+      {
+
+        num--;
+        if(num==0)
+        {
+          document.getElementById("con").disabled = true;
+        }
+        if(front==rear)
+        {
+          queue[front] =0;
+          front =-1;
+          rear =-1;
+        }
+        else
+        {
+          queue[front]=0;
+          front = (front+1)%7;
+        }
+        color();
+        counter();
+      }
+    </script>
+  </div>
+</body>
